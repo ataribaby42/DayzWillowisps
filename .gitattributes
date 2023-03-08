@@ -1,0 +1,16 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+* text eol=crlf
+
+# Denote all files that are truly binary and should not be modified.
+*.ogg binary
+*.paa binary
+*.p3d binary
+*.png binary
+*.jpg binary
+*.ms3d binary
+*.pdn binary
+*.bikey binary
+*.bisign binary
+*.pbo binary
+*.edds binary
