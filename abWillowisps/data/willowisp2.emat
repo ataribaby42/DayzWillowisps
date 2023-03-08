@@ -1,0 +1,8 @@
+Particle {
+ AlbedoMap "{67FC0EF884D0D212}abWillowisps/data/snowflake.edds" 
+ Color 0 1 0.4706 1
+ Diffuse 0 1 0.4706 1
+ Ambient 0 1 0.4706 1
+ Emissive 0 1 0.4706 1
+ BlendMode Additive_AlphaModulate
+}

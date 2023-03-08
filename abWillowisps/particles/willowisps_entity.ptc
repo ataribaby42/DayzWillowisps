@@ -1,0 +1,72 @@
+EffectDef {
+ Emitors {
+  EmitorDef willowisp1 {
+   ShapeType Box
+   ShapeSize 0 0 0
+   ConeAngle 0 0 0
+   MaxNum 5
+   BirthRate 20
+   BirthRateRND 0
+   BirthRateVel 1
+   Offset 0 0 0
+   Material "{BF2CC900E8AE2E46}abWillowisps/data/willowisp1.emat"
+   SizeMultiplier 0.2
+   SizeRND 0.2
+   RandomRotDir 0
+   StreakFullUV 0
+   VelAngle 0
+   RandomAngle 1
+   Sort 0
+   Velocity 0
+   AnimOnce 0
+   AnimFPS 24
+   LifetimeByAnim 0
+   LifeTime 0.5
+   LifeTimeRND 0.4
+   Color {
+    0 0.2911 1 1 1 0.3481 0.3544 0.3544
+   }
+   Alpha {
+    0 0 0.06622 1 0.12723 0 0.1942 1 0.25074 0 0.31473 1 0.37872 0 0.43824 1 0.50223 0 0.56994 1 0.62723 0 0.6994 1 0.7619 0.00633 0.83854 1 0.91146 0.16456 1 0
+   }
+   Size {
+    0 0 1 1
+   }
+   EffectTime 5
+  }
+  EmitorDef willowisp2 {
+   ShapeType Box
+   ShapeSize 0 0 0
+   ConeAngle 0 0 0
+   MaxNum 5
+   BirthRate 20
+   BirthRateRND 0
+   BirthRateVel 1
+   Offset 0 0 0
+   Material "{E1C4E0435723A049}abWillowisps/data/willowisp2.emat"
+   SizeMultiplier 0.2
+   SizeRND 0.25
+   RandomRotDir 0
+   StreakFullUV 0
+   VelAngle 0
+   RandomAngle 1
+   Sort 0
+   Velocity 0
+   AnimOnce 0
+   AnimFPS 24
+   LifetimeByAnim 0
+   LifeTime 0.5
+   LifeTimeRND 0.4
+   Color {
+    0 0.2911 1 1 1 0.3481 0.3544 0.3544
+   }
+   Alpha {
+    0 0 0.06622 1 0.12723 0 0.1942 1 0.25074 0 0.31473 1 0.37872 0 0.43824 1 0.50223 0 0.56994 1 0.62723 0 0.6994 1 0.7619 0.00633 0.83854 1 0.91146 0.16456 1 0
+   }
+   Size {
+    0 0 1 1
+   }
+   EffectTime 5
+  }
+ }
+}

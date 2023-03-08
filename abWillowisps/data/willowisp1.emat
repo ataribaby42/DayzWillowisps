@@ -1,0 +1,8 @@
+Particle {
+ AlbedoMap "{EDE7A854C07D1D23}abWillowisps/data/fireball.edds" 
+ Color 0 1 0.4706 1
+ Diffuse 0 1 0.4706 1
+ Ambient 0 1 0.4706 1
+ Emissive 0 1 0.4706 1
+ BlendMode Additive_AlphaModulate
+}
