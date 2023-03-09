@@ -50,6 +50,7 @@ Creates predefined Will-o'-the-Wisp infested area with logical center position a
 <ul>
   <li>Code by ataribaby.</li>
   <li>Special thanks for Heckler_CZ and geordie_pv from PigeonplayRP for valuable help.</li>
+  <li>HunterCZ for valuable help.</li>
   <li>Sounds:
 	<p>mrs_lenka for voiced random line</p>
     <p>https://freesound.org/people/stevenmaertens/sounds/676466/</p>
