@@ -3,7 +3,7 @@ class ab_Willowisp
 	private string name;
 	private float willowispModelHeightOffset = 1.0;
 	private float willowispModelLosCheckOriginHeightOffset = 0;
-	private float shaking = 0.05;
+	private float shaking = 0.1;
 	private vector origPosition;
 	private float animRange = 300;
 	private float transmittingRange = 100;
@@ -25,11 +25,13 @@ class ab_Willowisp
 	private bool attackTimeout;
 	private vector lastPos;
 	bool InAnimRange = false;
+	private string mode;
 	
 	void ab_Willowisp(string Name, vector AreaPosition, float AreaResetRadius)
 	{
 		if (GetGame())
 		{
+			mode = "IDLE";
 			attackTimeoutTimeslice = 0;
 			attackTimeout = false;
 			this.name = Name;
@@ -37,6 +39,9 @@ class ab_Willowisp
 			this.areaResetRadius = AreaResetRadius;
 			willowispObject = GetGame().CreateObject(willowispModels.GetRandomElement(), areaPosition);
 			willowispObjectBase = ab_willowisp_model_base.Cast(willowispObject);
+			willowispObjectBase.TeleportRange = teleportRange;
+			willowispObjectBase.WillowispModelHeightOffset = willowispModelHeightOffset;
+			willowispObjectBase.SetMode(mode);
 		}
 	}
 	
@@ -56,6 +61,12 @@ class ab_Willowisp
 			InAnimRange = false;
 			IsTransmitting = false;
 			IsTeleportBlocked = false;
+			mode = "IDLE";
+			willowispObjectBase.SetMode(mode);
+			movePos = vector.Zero;
+			targetPlayer = null;
+			attackTimeoutTimeslice = 0;
+			attackTimeout = false;
 		}
 	}
 	
@@ -97,14 +108,6 @@ class ab_Willowisp
 			vector headPosition= toObj.GetBonePositionWS(bone_index);
 			bone_index = toObj.GetBoneIndexByName("Pelvis");
 			vector pelvisPosition= toObj.GetBonePositionWS(bone_index);
-			
-			/* 3D debug particle 
-			vector hit_normal;
-			hit_normal = contactDir.VectorToAngles();
-			hit_normal[1] = hit_normal[1] + 90;
-			Particle hitEnd = Particle.PlayInWorld(ParticleList.DEBUG_DOT, contactPos);
-			hitEnd.SetOrientation(hit_normal);
-			*/
 			
 			if (DayZPhysics.RaycastRV(begPos, endPos, contactPos, contactDir, contactComponent, results, with, ignore, sorted, ground_only, iType, radius))
 			{
@@ -151,7 +154,7 @@ class ab_Willowisp
 			
 			if (movePos == vector.Zero)
 			{
-				willowispObject.SetPosition(Vector(origPosition[0] + Math.RandomFloatInclusive(-shaking, shaking), origPosition[1] + Math.RandomFloatInclusive(-shaking, shaking), origPosition[2] + Math.RandomFloatInclusive(-shaking, shaking)));
+				willowispObjectBase.MoveTo(Vector(origPosition[0] + Math.RandomFloatInclusive(-shaking, shaking), origPosition[1] + Math.RandomFloatInclusive(-shaking, shaking), origPosition[2] + Math.RandomFloatInclusive(-shaking, shaking)), 6, mode);
 			}
 			else
 			{
@@ -165,12 +168,20 @@ class ab_Willowisp
 					if (distance <= teleportKillRange)
 					{
 						willowispSpeed = 10;	
+						mode = "ATTACK";
+					}
+					else
+					{
+						mode = "MOVE";
 					}
 				}
 				
 				if (!MoveTo(movePos, willowispSpeed, timeslice))
 				{
 					movePos = vector.Zero;
+					origPosition = willowispObject.GetPosition();
+					mode = "IDLE";
+					willowispObjectBase.SetMode(mode);
 				}
 				
 				if (targetPlayer && targetPlayer.IsAlive())
@@ -178,7 +189,8 @@ class ab_Willowisp
 					vector willowispTestPos = willowispObject.GetPosition();
 					willowispTestPos = Vector(willowispTestPos[0], willowispTestPos[1] - willowispModelHeightOffset, willowispTestPos[2]);
 					distance = vector.Distance(targetPlayer.GetPosition(), willowispTestPos);
-					if (distance <= 1)
+					
+					if (distance <= 1.0)
 					{
 						willowispObjectBase.RequestPlayKill();
 						targetPlayer.RequestWillowispKill(name);
@@ -206,21 +218,13 @@ class ab_Willowisp
 				vector willowispPos = willowispObject.GetPosition();
 				float distance = vector.Distance(position, willowispPos);
 				
-				if(distance <= 0.2)
+				if(distance <= 0.1)
 				{
 					return false;
 				}
 				else
 				{
-					distance = Math.Min(teleportRange, distance);
-					distance = Math.Min(distance, timeslice * speed);
-					vector angles = vector.Direction(position, willowispPos).Normalized().VectorToAngles();
-					angles[0] = angles[0] + 180;
-					float x = distance * Math.Sin(angles[0] * Math.DEG2RAD);
-					float z = distance * Math.Cos(angles[0] * Math.DEG2RAD);
-					float y = GetGame().SurfaceY(willowispPos[0] + x, willowispPos[2] + z);
-					willowispObject.SetPosition(Vector(willowispPos[0] + x + Math.RandomFloatInclusive(-shaking, shaking), y + willowispModelHeightOffset + Math.RandomFloatInclusive(-shaking, shaking), willowispPos[2] + z + Math.RandomFloatInclusive(-shaking, shaking)));
-					origPosition = willowispObject.GetPosition();
+					willowispObjectBase.MoveTo(position, speed, mode);
 					return true;
 				}
 			}
@@ -304,7 +308,7 @@ class ab_Willowisp
 				speed = Math.RandomFloatInclusive(1, 5);
 			}
 			else
-			{
+			{	
 				targetPlayer = null;
 			}
 		}

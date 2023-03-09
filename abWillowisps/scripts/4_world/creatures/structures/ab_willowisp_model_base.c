@@ -1,18 +1,27 @@
 class ab_willowisp_model_base extends BuildingSuper
 {
-	protected ref EffectSound 	m_KillFx;
-	protected ref EffectSound 	m_AmbientFx;
-	protected ref EffectSound 	m_CreepyFx;
-	Willowisps_Entity_LIGHT 	m_Light;
-	Particle					m_WillowispsParticle; 
+	protected ref EffectSound 			m_KillFx;
+	protected ref EffectSound 			m_AmbientFx;
+	protected ref EffectSound 			m_CreepyFx;
+	protected Willowisps_Entity_LIGHT 	m_Light;
+	protected Particle					m_WillowispsParticle; 
+	protected vector 					moveTo;
+	protected float 					speedTo;
+	protected string 					mode;
+	float 								TeleportRange;
+	float								WillowispModelHeightOffset;
 
 	void ab_willowisp_model_base()
 	{	
+		SetEventMask( EntityEvent.SIMULATE );
+		
+		moveTo = vector.Zero;
+		mode = "IDLE";
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(UpdateTheLifeTime, 1000, false);
 		
 		if ( GetGame().IsClient() || !GetGame().IsMultiplayer() )
 		{
-			m_Light = Willowisps_Entity_LIGHT.Cast( ScriptedLightBase.CreateLight(Willowisps_Entity_LIGHT, "0 1 0", 0.5) );
+			m_Light = Willowisps_Entity_LIGHT.Cast(ScriptedLightBase.CreateLight(Willowisps_Entity_LIGHT, "0 1 0", 0.5));
 			m_Light.AttachOnObject(this, "0 1 0", "0 0 0");
 			m_WillowispsParticle = Particle.PlayOnObject(ParticleList.Willowisps_Entity, this);
 		}
@@ -22,6 +31,56 @@ class ab_willowisp_model_base extends BuildingSuper
 	{
 		if (m_WillowispsParticle) m_WillowispsParticle.Stop();
 		if (m_Light) m_Light.FadeOut();
+	}
+	
+	override void EOnSimulate( IEntity owner, float dt )
+	{
+		if (GetGame() && GetGame().IsServer())
+		{
+			if(moveTo != vector.Zero)
+			{
+				float x;
+				float y;
+				float z;
+				
+				if (mode == "IDLE")
+				{
+					x = moveTo[0];
+					y = moveTo[1];;
+					z = moveTo[2];
+				}
+				else
+				{
+					vector willowispPos = GetPosition();
+					float distance = vector.Distance(moveTo, willowispPos);
+					distance = Math.Min(TeleportRange, distance);
+					distance = Math.Min(distance, dt * speedTo);
+					vector angles = vector.Direction(moveTo, willowispPos).Normalized().VectorToAngles();
+					angles[0] = angles[0] + 180;
+					x = willowispPos[0] + (distance * Math.Sin(angles[0] * Math.DEG2RAD));
+					z = willowispPos[2] + (distance * Math.Cos(angles[0] * Math.DEG2RAD));
+					y = GetGame().SurfaceY(x, z) + WillowispModelHeightOffset;
+				}
+				
+				vector movePos = Vector(x, y, z);
+				vector transform[4];
+				GetTransform(transform);
+				transform[3] = movePos;
+				MoveInTime(transform, dt);
+			}
+		}
+	}
+	
+	void MoveTo(vector position, float speed, string Mode)
+	{
+		moveTo = position;
+		speedTo = speed;
+		mode = Mode;
+	}
+	
+	void SetMode(string Mode)
+	{
+		mode = Mode;
 	}
 	
 	void UpdateTheLifeTime()

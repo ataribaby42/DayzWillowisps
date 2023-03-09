@@ -20,44 +20,50 @@ modded class PlayerBase extends ManBase
 	{
 		super.EOnFrame(other, timeSlice);
 		
-		if (GetGame() && GetGame().IsServer() && willowispKillRequested)	
+		if (GetGame() && GetGame().IsServer())	
 		{
-			willowispKillTimer += timeSlice;
-			
-			if (willowispKillTimer >= 0.20)
+			if (willowispKillRequested)
 			{
-				willowispKillTimer = 0;	
-				willowispKillRequested = false;
-				PlayerIdentity identity = GetIdentity();
+				willowispKillTimer += timeSlice;
 				
-				if (identity)
+				if (willowispKillTimer >= 0.50)
 				{
-					Print("Player <" + GetIdentity().GetName() + "> has been harmed by Will-o'-Wisp <" + willowispKillName + ">.");
+					willowispKillTimer = 0;	
+					willowispKillRequested = false;
+					PlayerIdentity identity = GetIdentity();
+					
+					if (identity)
+					{
+						Print("Player <" + GetIdentity().GetName() + "> has been harmed by Will-o'-Wisp <" + willowispKillName + ">.");
+					}
+					else
+					{
+						Print("Player <unknown> has been harmed by Will-o'-Wisp <" + willowispKillName + ">.");
+					}
+					
+					willowispKillName = "";
+					
+					if (GetAllowDamage())
+					{
+						float currenthealth = GetHealth("GlobalHealth", "Health");
+						currenthealth = currenthealth - Math.RandomFloatInclusive(5, 10);
+						SetHealth("GlobalHealth", "Health", currenthealth);
+						RequestUnconsciousness(true);
+						willowispUnco = true;
+					}
 				}
-				else
-				{
-					Print("Player <unknown> has been harmed by Will-o'-Wisp <" + willowispKillName + ">.");
-				}
-				
-				willowispKillName = "";
-				
-				float currenthealth = GetHealth("GlobalHealth", "Health");
-				currenthealth = currenthealth - Math.RandomFloatInclusive(5, 10);
-				SetHealth("GlobalHealth", "Health", currenthealth);
-				RequestUnconsciousness(true);
-				willowispUnco = true;
 			}
-		}
-		
-		if (willowispUnco)
-		{
-			willowispUncoTimer += timeSlice;
 			
-			if (willowispUncoTimer >= 10)
+			if (willowispUnco)
 			{
-				RequestUnconsciousness(false);
-				willowispUncoTimer = 0;
-				willowispUnco = false;
+				willowispUncoTimer += timeSlice;
+				
+				if (willowispUncoTimer >= 10)
+				{
+					RequestUnconsciousness(false);
+					willowispUncoTimer = 0;
+					willowispUnco = false;
+				}
 			}
 		}
 	}
