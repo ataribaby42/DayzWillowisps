@@ -62,7 +62,7 @@ class ab_Willowisp
 			IsTransmitting = false;
 			IsTeleportBlocked = false;
 			mode = "IDLE";
-			willowispObjectBase.SetMode(mode);
+			willowispObjectBase.Reset();
 			movePos = vector.Zero;
 			targetPlayer = null;
 			attackTimeoutTimeslice = 0;

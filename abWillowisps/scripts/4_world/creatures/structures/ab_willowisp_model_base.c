@@ -71,6 +71,13 @@ class ab_willowisp_model_base extends BuildingSuper
 		}
 	}
 	
+	void Reset()
+	{
+		moveTo = vector.Zero;
+		speedTo = 0;
+		mode = "IDLE";
+	}
+	
 	void MoveTo(vector position, float speed, string Mode)
 	{
 		moveTo = position;
