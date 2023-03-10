@@ -9,7 +9,7 @@ EffectDef {
    BirthRateRND 0
    BirthRateVel 1
    Offset 0 0 0
-   LocalTransform 1
+   LocalTransform 0
    Material "{BF2CC900E8AE2E46}abWillowisps/data/willowisp1.emat"
    SizeMultiplier 0.2
    SizeRND 0.2
@@ -44,7 +44,7 @@ EffectDef {
    BirthRateRND 0
    BirthRateVel 1
    Offset 0 0 0
-   LocalTransform 1
+   LocalTransform 0
    Material "{E1C4E0435723A049}abWillowisps/data/willowisp2.emat"
    SizeMultiplier 0.2
    SizeRND 0.25

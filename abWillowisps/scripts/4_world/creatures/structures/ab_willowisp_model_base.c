@@ -1,29 +1,46 @@
 class ab_willowisp_model_base extends BuildingSuper
 {
-	protected ref EffectSound 			m_KillFx;
-	protected ref EffectSound 			m_AmbientFx;
-	protected ref EffectSound 			m_CreepyFx;
-	protected Willowisps_Entity_LIGHT 	m_Light;
-	protected Particle					m_WillowispsParticle; 
-	protected vector 					moveTo;
-	protected float 					speedTo;
-	protected string 					mode;
-	float 								TeleportRange;
-	float								WillowispModelHeightOffset;
+	protected ref EffectSound 				m_KillFx;
+	protected ref EffectSound 				m_AmbientFx;
+	protected ref EffectSound 				m_CreepyFx;
+	protected ab_Willowisps_Entity_Light	m_Light;
+	protected Particle						m_WillowispsParticle; 
+	protected vector 						moveTo;
+	protected float 						speedTo;
+	protected string 						mode;
+	protected vector 						scatter;
+	protected float 						maxScatter = 0.5;
+	protected float 						scatterTimeslice;
+	float 									TeleportRange;
+	float									WillowispModelHeightOffset;
 
 	void ab_willowisp_model_base()
 	{	
 		SetEventMask( EntityEvent.SIMULATE );
 		
 		moveTo = vector.Zero;
+		scatter = vector.Zero;
 		mode = "IDLE";
+		scatterTimeslice = 0;
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(UpdateTheLifeTime, 1000, false);
 		
 		if ( GetGame().IsClient() || !GetGame().IsMultiplayer() )
 		{
-			m_Light = Willowisps_Entity_LIGHT.Cast(ScriptedLightBase.CreateLight(Willowisps_Entity_LIGHT, "0 1 0", 0.5));
+			m_Light = ab_Willowisps_Entity_Light.Cast(ScriptedLightBase.CreateLight(ab_Willowisps_Entity_Light, "0 1 0", 0.5));
 			m_Light.AttachOnObject(this, "0 1 0", "0 0 0");
-			m_WillowispsParticle = Particle.PlayOnObject(ParticleList.Willowisps_Entity, this);
+			
+			if (ab_Willowisp_Particle == 1)
+			{
+				m_WillowispsParticle = Particle.PlayOnObject(ParticleList.Willowisps_Entity_Traces, this);
+			}
+			else if (ab_Willowisp_Particle == 2)
+			{
+				m_WillowispsParticle = Particle.PlayOnObject(ParticleList.Willowisps_Entity_Traces_All, this);
+			}
+			else
+			{
+				m_WillowispsParticle = Particle.PlayOnObject(ParticleList.Willowisps_Entity, this);
+			}
 		}
 	}
 	
@@ -37,6 +54,14 @@ class ab_willowisp_model_base extends BuildingSuper
 	{
 		if (GetGame() && GetGame().IsServer())
 		{
+			scatterTimeslice += dt
+			
+			if (scatterTimeslice >= 0.25)
+			{
+				scatterTimeslice = 0;	
+				scatter = Vector(Math.RandomFloatInclusive(-maxScatter, maxScatter), Math.RandomFloatInclusive(-maxScatter / 2, maxScatter / 2), Math.RandomFloatInclusive(-maxScatter, maxScatter));
+			}
+			
 			if(moveTo != vector.Zero)
 			{
 				float x;
@@ -57,9 +82,9 @@ class ab_willowisp_model_base extends BuildingSuper
 					distance = Math.Min(distance, dt * speedTo);
 					vector angles = vector.Direction(moveTo, willowispPos).Normalized().VectorToAngles();
 					angles[0] = angles[0] + 180;
-					x = willowispPos[0] + (distance * Math.Sin(angles[0] * Math.DEG2RAD));
-					z = willowispPos[2] + (distance * Math.Cos(angles[0] * Math.DEG2RAD));
-					y = GetGame().SurfaceY(x, z) + WillowispModelHeightOffset;
+					x = willowispPos[0] + (distance * Math.Sin(angles[0] * Math.DEG2RAD)) + (scatter[0] * dt * speedTo);
+					z = willowispPos[2] + (distance * Math.Cos(angles[0] * Math.DEG2RAD)) + (scatter[2] * dt * speedTo);
+					y = GetGame().SurfaceY(x, z) + WillowispModelHeightOffset + (scatter[1] * dt * speedTo);
 				}
 				
 				vector movePos = Vector(x, y, z);
@@ -174,24 +199,5 @@ class ab_willowisp_model_base extends BuildingSuper
 				break;
 			}
 		}
-	}
-}
-
-class Willowisps_Entity_LIGHT extends PointLightBase
-{		
-	void Willowisps_Entity_LIGHT()
-	{
-		SetVisibleDuringDaylight(true);
-		SetRadiusTo(7);
-		SetBrightnessTo(0.6);
-		SetCastShadow(false);
-		SetFadeOutTime(3);
-		SetDiffuseColor(0.0, 1, 0.47058823529);
-		SetAmbientColor(0.0, 1, 0.47058823529);
-		SetFlareVisible(false);
-		SetFlickerAmplitude(0.7);
-		SetFlickerSpeed(4.0);
-		SetDancingShadowsMovementSpeed(0.4);
-		SetDancingShadowsAmplitude(0.5);
 	}
 }

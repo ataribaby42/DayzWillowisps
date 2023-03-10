@@ -218,7 +218,7 @@ class ab_Willowisp
 				vector willowispPos = willowispObject.GetPosition();
 				float distance = vector.Distance(position, willowispPos);
 				
-				if(distance <= 0.1)
+				if(distance <= 0.2)
 				{
 					return false;
 				}

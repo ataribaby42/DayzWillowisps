@@ -8,6 +8,8 @@ static ref ab_WillowispManager Get_ab_WillowispManager()
 	return g_ab_WillowispManager;
 }
 
+static int ab_Willowisp_Particle = 1; // 0 - no traces, 1 - star traces, 2 - star and ball traces
+
 class ab_WillowispManager
 {
 	private ref array<ref ab_WillowispController> controllers = new array<ref ab_WillowispController>();
