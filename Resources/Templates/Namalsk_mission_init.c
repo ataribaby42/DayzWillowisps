@@ -1,5 +1,9 @@
 void SpawnWillowisp()
 {
+	ab_Willowisp_Stealable_Items.Clear();
+	ab_Willowisp_Stealable_Items.Insert("NVGoggles");
+	ab_Willowisp_Stealable_Items.Insert("GasMask_Filter");
+	
 	Get_ab_WillowispManager().CreateRandomWillowispController("Sebjan Mine Woods", "4802.379883 88.361198 8559.879883", 500, 40, Math.RandomIntInclusive(1, 3));
 	
 	array<string> willowispPositions = {

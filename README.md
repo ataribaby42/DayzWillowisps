@@ -1,5 +1,5 @@
 # Will-o'-the-Wisp
-<p>Will-o'-the-Wisp creature mod for Dayz. Will-o'-the-Wisp tries to catch player and charge into him causing unconscious state for 10 seconds and small random damage. After charge, Will-o'-the-Wisp is idle for 20 seconds giving 10s for recovery and escape. Will-o'-the-Wisp always goes to last seen player position. It is possible to hide from it or just run away.</p>
+<p>Will-o'-the-Wisp creature mod for Dayz. Will-o'-the-Wisp tries to catch player and charge into him causing unconscious state for 10 seconds and small random damage and optionally steals one random item from player. After charge, Will-o'-the-Wisp is idle for 20 seconds giving 10s for recovery and escape. Will-o'-the-Wisp always goes to last seen player position. It is possible to hide from it or just run away.</p>
 <p>https://youtu.be/qeGVvNwfBuA</p>
 <p>Will-o'-the-Wisp code has been written reusing some parts from my Designators mod. All sounds and textures are from free sources. Respective authors are noted in credits.</p>
 
@@ -45,6 +45,18 @@ Creates circular Will-o'-the-Wisp infested area with size of radius at position 
 **_Get_ab_WillowispManager().CreatePredefinedWillowispController(string name, vector position, float resetRadius, ref array<string> willowispPositions)_**
   
 Creates predefined Will-o'-the-Wisp infested area with logical center position and fills it with Will-o'-the-Wisps from willowispPositions string array that contains coords in vector format. Area resets everytime no players are inside resetRadius. You can name area with name parameter to see it in logs.
+
+**_ab_Willowisp_Stealable_Items_**
+Static string array that defines stealable items that Will-o'-the-Wisp is allowed to steal from knocked dow player after successful attack. Array is initialized and empty by default.
+In your init.c before spawning any Will-o'-the-Wisps set items with following code:
+
+```
+ab_Willowisp_Stealable_Items.Clear();
+ab_Willowisp_Stealable_Items.Insert("NVGoggles");
+ab_Willowisp_Stealable_Items.Insert("BandageDressing");
+ab_Willowisp_Stealable_Items.Insert("DisinfectantSpray");
+ab_Willowisp_Stealable_Items.Insert("DisinfectantAlcohol");
+```
 
 ### CREDITS
 <ul>
