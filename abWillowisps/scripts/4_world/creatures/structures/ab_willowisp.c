@@ -193,7 +193,7 @@ class ab_Willowisp
 					if (distance <= 1.0)
 					{
 						willowispObjectBase.RequestPlayKill();
-						targetPlayer.RequestWillowispKill(name);
+						targetPlayer.ab_RequestWillowispKill(name);
 						attackTimeoutTimeslice = 0;
 						attackTimeout = true;
 						movePos = lastPos;
