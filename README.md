@@ -1,5 +1,5 @@
 # Will-o'-the-Wisp
-<p>Will-o'-the-Wisp creature mod for Dayz. Will-o'-the-Wisp tries to catch player and charge into him causing unconscious state for 10 seconds and small random damage and optionally steals one random item from player. After charge, Will-o'-the-Wisp is idle for 20 seconds giving 10s for recovery and escape. Will-o'-the-Wisp always goes to last seen player position. It is possible to hide from it or just run away.</p>
+<p>Will-o'-the-Wisp creature mod for Dayz. Will-o'-the-Wisp tries to catch player and charge into him causing unconscious state for 10 seconds, small random damage and optionally steals one random item from player. After charge, Will-o'-the-Wisp is idle for 20 seconds giving 10s for recovery and escape. Will-o'-the-Wisp always goes to last seen player position. It is possible to hide from it or just run away.</p>
 <p>https://youtu.be/qeGVvNwfBuA</p>
 <p>Will-o'-the-Wisp code has been written reusing some parts from my Designators mod. All sounds and textures are from free sources. Respective authors are noted in credits.</p>
 
