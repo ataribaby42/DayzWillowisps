@@ -1,3 +1,26 @@
+//CLIENT DEBUG
+/*
+void ab_MSG(string msg)
+{
+	array<Man> players = new array<Man>();
+	GetGame().GetPlayers(players);
+	
+	foreach (Man player : players)
+	{
+		PlayerBase pb = PlayerBase.Cast(player);
+		pb.MessageImportant(msg);
+	}
+}
+*/
+
+enum ab_Willowisp_Mode 
+{
+	IDLE,
+	COOLDOWN,
+	MOVE,
+	ATTACK
+}
+
 class ab_Willowisp
 {
 	private string name;
@@ -25,13 +48,13 @@ class ab_Willowisp
 	private bool attackTimeout;
 	private vector lastPos;
 	bool InAnimRange = false;
-	private string mode;
+	private ab_Willowisp_Mode mode;
 	
 	void ab_Willowisp(string Name, vector AreaPosition, float AreaResetRadius)
 	{
 		if (GetGame())
 		{
-			mode = "IDLE";
+			mode = ab_Willowisp_Mode.IDLE;
 			attackTimeoutTimeslice = 0;
 			attackTimeout = false;
 			this.name = Name;
@@ -61,7 +84,7 @@ class ab_Willowisp
 			InAnimRange = false;
 			IsTransmitting = false;
 			IsTeleportBlocked = false;
-			mode = "IDLE";
+			mode = ab_Willowisp_Mode.IDLE;
 			willowispObjectBase.Reset();
 			movePos = vector.Zero;
 			targetPlayer = null;
@@ -165,14 +188,21 @@ class ab_Willowisp
 				{
 					distance = vector.Distance(targetPlayer.GetPosition(), willowispObject.GetPosition());
 					
-					if (distance <= teleportKillRange)
+					if (distance <= teleportKillRange && !attackTimeout)
 					{
-						willowispSpeed = 10;	
-						mode = "ATTACK";
+						willowispSpeed = 10;
+						mode = ab_Willowisp_Mode.ATTACK;
 					}
 					else
 					{
-						mode = "MOVE";
+						if (attackTimeout)
+						{
+							mode = ab_Willowisp_Mode.COOLDOWN;
+						}
+						else
+						{
+							mode = ab_Willowisp_Mode.MOVE;
+						}
 					}
 				}
 				
@@ -180,7 +210,16 @@ class ab_Willowisp
 				{
 					movePos = vector.Zero;
 					origPosition = willowispObject.GetPosition();
-					mode = "IDLE";
+					
+					if (attackTimeout)
+					{
+						mode = ab_Willowisp_Mode.COOLDOWN;
+					}
+					else
+					{
+						mode = ab_Willowisp_Mode.IDLE;
+					}
+					
 					willowispObjectBase.SetMode(mode);
 				}
 				
@@ -198,6 +237,9 @@ class ab_Willowisp
 						attackTimeout = true;
 						movePos = lastPos;
 						targetPlayer = null;
+						willowispSpeed = 3;
+						mode = ab_Willowisp_Mode.MOVE;
+						willowispObjectBase.MoveTo(movePos, willowispSpeed, mode);
 					}
 				}
 			}
@@ -207,6 +249,9 @@ class ab_Willowisp
 			movePos = vector.Zero;
 			targetPlayer = null;
 		}
+		
+		//CLIENT DEBUG
+		//ab_MSG(EnumTools.EnumToString(ab_Willowisp_Mode, mode));
 	}
 	
 	bool MoveTo(vector position, float speed, float timeslice)

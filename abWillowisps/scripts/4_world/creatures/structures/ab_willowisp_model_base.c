@@ -7,7 +7,7 @@ class ab_willowisp_model_base extends BuildingSuper
 	protected Particle						m_WillowispsParticle; 
 	protected vector 						moveTo;
 	protected float 						speedTo;
-	protected string 						mode;
+	protected ab_Willowisp_Mode				mode;
 	protected vector 						scatter;
 	protected float 						maxScatter = 0.5;
 	protected float 						scatterTimeslice;
@@ -20,7 +20,7 @@ class ab_willowisp_model_base extends BuildingSuper
 		
 		moveTo = vector.Zero;
 		scatter = vector.Zero;
-		mode = "IDLE";
+		mode = ab_Willowisp_Mode.IDLE;
 		scatterTimeslice = 0;
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(UpdateTheLifeTime, 1000, false);
 		
@@ -58,8 +58,16 @@ class ab_willowisp_model_base extends BuildingSuper
 			
 			if (scatterTimeslice >= 0.25)
 			{
-				scatterTimeslice = 0;	
-				scatter = Vector(Math.RandomFloatInclusive(-maxScatter, maxScatter), Math.RandomFloatInclusive(-maxScatter / 2, maxScatter / 2), Math.RandomFloatInclusive(-maxScatter, maxScatter));
+				scatterTimeslice = 0;
+				
+				if (mode == ab_Willowisp_Mode.ATTACK)
+				{
+					scatter = Vector(0, 0, 0);
+				}
+				else
+				{
+					scatter = Vector(Math.RandomFloatInclusive(-maxScatter, maxScatter), Math.RandomFloatInclusive(-maxScatter / 2, maxScatter / 2), Math.RandomFloatInclusive(-maxScatter, maxScatter));
+				}	
 			}
 			
 			if(moveTo != vector.Zero)
@@ -68,7 +76,7 @@ class ab_willowisp_model_base extends BuildingSuper
 				float y;
 				float z;
 				
-				if (mode == "IDLE")
+				if (mode == ab_Willowisp_Mode.IDLE || mode == ab_Willowisp_Mode.COOLDOWN)
 				{
 					x = moveTo[0];
 					y = moveTo[1];;
@@ -100,17 +108,17 @@ class ab_willowisp_model_base extends BuildingSuper
 	{
 		moveTo = vector.Zero;
 		speedTo = 0;
-		mode = "IDLE";
+		mode = ab_Willowisp_Mode.IDLE;
 	}
 	
-	void MoveTo(vector position, float speed, string Mode)
+	void MoveTo(vector position, float speed, ab_Willowisp_Mode Mode)
 	{
 		moveTo = position;
 		speedTo = speed;
 		mode = Mode;
 	}
 	
-	void SetMode(string Mode)
+	void SetMode(ab_Willowisp_Mode Mode)
 	{
 		mode = Mode;
 	}
