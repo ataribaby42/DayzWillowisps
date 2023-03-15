@@ -7,4 +7,4 @@ tooltip = "$STR_abWillowisp_mod_name";
 overview = "$STR_abWillowisp_mod_overview";
 action = "https://steamcommunity.com/sharedfiles/filedetails/?id=2943755582";
 author = "ataribaby";
-version = "1.10";
+version = "1.11";

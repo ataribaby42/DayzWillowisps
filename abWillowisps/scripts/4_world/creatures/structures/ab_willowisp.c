@@ -254,7 +254,7 @@ class ab_Willowisp
 		//ab_MSG(EnumTools.EnumToString(ab_Willowisp_Mode, mode));
 	}
 	
-	bool MoveTo(vector position, float speed, float timeslice)
+	bool MoveTo(vector position, float Speed, float timeslice)
 	{
 		if (GetGame())
 		{
@@ -269,7 +269,7 @@ class ab_Willowisp
 				}
 				else
 				{
-					willowispObjectBase.MoveTo(position, speed, mode);
+					willowispObjectBase.MoveTo(position, Speed, mode);
 					return true;
 				}
 			}

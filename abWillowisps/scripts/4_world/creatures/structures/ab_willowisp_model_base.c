@@ -54,7 +54,7 @@ class ab_willowisp_model_base extends BuildingSuper
 	{
 		if (GetGame() && GetGame().IsServer())
 		{
-			scatterTimeslice += dt
+			scatterTimeslice += dt;
 			
 			if (scatterTimeslice >= 0.25)
 			{
