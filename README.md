@@ -47,7 +47,7 @@ Creates circular Will-o'-the-Wisp infested area with size of radius at position 
 Creates predefined Will-o'-the-Wisp infested area with logical center position and fills it with Will-o'-the-Wisps from willowispPositions string array that contains coords in vector format. Area resets everytime no players are inside resetRadius. You can name area with name parameter to see it in logs.
 
 **_ab_Willowisp_Stealable_Items_**
-Static string array that defines stealable items that Will-o'-the-Wisp is allowed to steal from knocked dow player after successful attack. Array is initialized and empty by default.
+Static string array that defines stealable items that Will-o'-the-Wisp is allowed to steal from knocked down player after successful attack. Array is initialized and empty by default.
 In your init.c before spawning any Will-o'-the-Wisps set items with following code:
 
 ```
