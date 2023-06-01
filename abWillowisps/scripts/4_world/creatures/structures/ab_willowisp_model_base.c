@@ -1,3 +1,5 @@
+//#define AB_WILLOWISP_SMOOTH_MOVEMENT
+
 class ab_willowisp_model_base extends BuildingSuper
 {
 	protected ref EffectSound 				m_KillFx;
@@ -17,7 +19,7 @@ class ab_willowisp_model_base extends BuildingSuper
 	void ab_willowisp_model_base()
 	{	
 		SetEventMask( EntityEvent.SIMULATE );
-		
+
 		moveTo = vector.Zero;
 		scatter = vector.Zero;
 		mode = ab_Willowisp_Mode.IDLE;
@@ -96,10 +98,14 @@ class ab_willowisp_model_base extends BuildingSuper
 				}
 				
 				vector movePos = Vector(x, y, z);
+#ifdef AB_WILLOWISP_SMOOTH_MOVEMENT				
 				vector transform[4];
 				GetTransform(transform);
 				transform[3] = movePos;
 				MoveInTime(transform, dt);
+#else				
+				SetPosition(movePos);
+#endif				
 			}
 		}
 	}

@@ -1,3 +1,5 @@
+#define AB_WILLOWISP_NEW_MOVEMENT
+
 //CLIENT DEBUG
 /*
 void ab_MSG(string msg)
