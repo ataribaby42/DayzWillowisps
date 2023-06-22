@@ -13,12 +13,13 @@ class ab_willowisp_model_base extends BuildingSuper
 	protected vector 						scatter;
 	protected float 						maxScatter = 0.5;
 	protected float 						scatterTimeslice;
+	protected bool							active = false;
 	float 									TeleportRange;
 	float									WillowispModelHeightOffset;
 
 	void ab_willowisp_model_base()
 	{	
-		SetEventMask( EntityEvent.SIMULATE );
+		SetEventMask(EntityEvent.SIMULATE);
 
 		moveTo = vector.Zero;
 		scatter = vector.Zero;
@@ -26,7 +27,7 @@ class ab_willowisp_model_base extends BuildingSuper
 		scatterTimeslice = 0;
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(UpdateTheLifeTime, 1000, false);
 		
-		if ( GetGame().IsClient() || !GetGame().IsMultiplayer() )
+		if (GetGame().IsClient() || !GetGame().IsMultiplayer())
 		{
 			m_Light = ab_Willowisps_Entity_Light.Cast(ScriptedLightBase.CreateLight(ab_Willowisps_Entity_Light, "0 1 0", 0.5));
 			m_Light.AttachOnObject(this, "0 1 0", "0 0 0");
@@ -50,11 +51,13 @@ class ab_willowisp_model_base extends BuildingSuper
 	{
 		if (m_WillowispsParticle) m_WillowispsParticle.Stop();
 		if (m_Light) m_Light.FadeOut();
+		
+		ClearEventMask(EntityEvent.SIMULATE);
 	}
 	
 	override void EOnSimulate( IEntity owner, float dt )
 	{
-		if (GetGame() && GetGame().IsServer())
+		if (GetGame() && GetGame().IsServer() && active)
 		{
 			scatterTimeslice += dt;
 			
@@ -105,7 +108,7 @@ class ab_willowisp_model_base extends BuildingSuper
 				MoveInTime(transform, dt);
 #else				
 				SetPosition(movePos);
-#endif				
+#endif			
 			}
 		}
 	}
@@ -129,6 +132,11 @@ class ab_willowisp_model_base extends BuildingSuper
 		mode = Mode;
 	}
 	
+	void SetActive(bool isActive)
+	{
+		active = isActive;
+	}
+	
 	void UpdateTheLifeTime()
     {
         SetLifetime(360000);
@@ -136,7 +144,7 @@ class ab_willowisp_model_base extends BuildingSuper
 	
 	void RequestPlayKill()
 	{
-		if (GetGame() && GetGame().IsServer())
+		if (GetGame() && GetGame().IsServer() && active)
 		{
 			Param1<string> p = new Param1<string>("kill");
 			GetGame().RPCSingleParam(this, abWillowispRPC.RPC_AB_WILLOWISP_SOUND_REQUEST, p, true);
@@ -145,7 +153,7 @@ class ab_willowisp_model_base extends BuildingSuper
 	
 	void RequestPlayAmbient()
 	{
-		if (GetGame() && GetGame().IsServer())
+		if (GetGame() && GetGame().IsServer() && active)
 		{
 			Param1<string> p = new Param1<string>("ambient");
 			GetGame().RPCSingleParam(this, abWillowispRPC.RPC_AB_WILLOWISP_SOUND_REQUEST, p, true);
@@ -154,7 +162,7 @@ class ab_willowisp_model_base extends BuildingSuper
 	
 	void RequestPlayCreepy()
 	{
-		if (GetGame() && GetGame().IsServer())
+		if (GetGame() && GetGame().IsServer() && active)
 		{
 			Param1<string> p = new Param1<string>("creepy");
 			GetGame().RPCSingleParam(this, abWillowispRPC.RPC_AB_WILLOWISP_SOUND_REQUEST, p, true);

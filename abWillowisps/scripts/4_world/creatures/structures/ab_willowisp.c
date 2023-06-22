@@ -67,6 +67,7 @@ class ab_Willowisp
 			willowispObjectBase.TeleportRange = teleportRange;
 			willowispObjectBase.WillowispModelHeightOffset = willowispModelHeightOffset;
 			willowispObjectBase.SetMode(mode);
+			willowispObjectBase.SetActive(InAnimRange);
 		}
 	}
 	
@@ -358,6 +359,11 @@ class ab_Willowisp
 			{	
 				targetPlayer = null;
 			}
+			
+			willowispObjectBase.SetActive(InAnimRange);
+			
+			//CLIENT DEBUG
+			//ab_MSG(InAnimRange.ToString());
 		}
 	}
 }
