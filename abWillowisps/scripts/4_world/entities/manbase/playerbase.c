@@ -12,8 +12,6 @@ modded class PlayerBase extends ManBase
 	{
 		super.Init();
 		
-		ab_WillowispKillTimer = 0;
-		ab_WillowispUncoTimer = 0;
 		ab_WillowispUnco = false;
 		ab_WillowispKillRequested = false;
 	}
@@ -26,21 +24,18 @@ modded class PlayerBase extends ManBase
 		{
 			if (ab_WillowispKillRequested)
 			{
-				ab_WillowispKillTimer += timeSlice;
-				
-				if (ab_WillowispKillTimer >= 0.50)
+				if ((GetGame().GetTime() / 1000) >= ab_WillowispKillTimer)
 				{
-					ab_WillowispKillTimer = 0;	
 					ab_WillowispKillRequested = false;
 					PlayerIdentity identity = GetIdentity();
 					
 					if (identity)
 					{
-						Print("Player <" + GetIdentity().GetName() + "> has been harmed by Will-o'-Wisp <" + ab_WillowispKillName + ">.");
+						Print("Player <" + GetIdentity().GetName() + "> has been caught by Will-o'-Wisp <" + ab_WillowispKillName + ">.");
 					}
 					else
 					{
-						Print("Player <unknown> has been harmed by Will-o'-Wisp <" + ab_WillowispKillName + ">.");
+						Print("Player <unknown> has been caught by Will-o'-Wisp <" + ab_WillowispKillName + ">.");
 					}
 					
 					if (GetAllowDamage())
@@ -50,6 +45,7 @@ modded class PlayerBase extends ManBase
 						SetHealth("GlobalHealth", "Health", currenthealth);
 						RequestUnconsciousness(true);
 						ab_WillowispRandomItemSteal(ab_WillowispKillName);
+						ab_WillowispUncoTimer = (GetGame().GetTime() / 1000) + 10;
 						ab_WillowispUnco = true;
 					}
 					
@@ -59,12 +55,9 @@ modded class PlayerBase extends ManBase
 			
 			if (ab_WillowispUnco)
 			{
-				ab_WillowispUncoTimer += timeSlice;
-				
-				if (ab_WillowispUncoTimer >= 10)
+				if ((GetGame().GetTime() / 1000) >= ab_WillowispUncoTimer)
 				{
 					RequestUnconsciousness(false);
-					ab_WillowispUncoTimer = 0;
 					ab_WillowispUnco = false;
 				}
 			}
@@ -126,6 +119,7 @@ modded class PlayerBase extends ManBase
 	
 	void ab_RequestWillowispKill(string name)
 	{
+		ab_WillowispKillTimer = (GetGame().GetTime() / 1000) + 0.5;
 		ab_WillowispKillRequested = true;
 		ab_WillowispKillName = name;
 	}

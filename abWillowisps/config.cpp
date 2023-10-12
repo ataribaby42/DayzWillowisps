@@ -18,7 +18,7 @@ class CfgMods
 	class abWillowisps
 	{
 		type="mod";
-		dependencies[] = {"Game", "World", "Mission"};
+		dependencies[] = {"Game", "World"};
 		
 		class defs
 		{
@@ -31,11 +31,6 @@ class CfgMods
 			{
 				value="";
 				files[]={"abWillowisps/scripts/4_world"};
-			};
-			class missionScriptModule
-			{
-				value="";
-				files[]={"abWillowisps/scripts/5_mission"};
 			};
 		};
 	};
